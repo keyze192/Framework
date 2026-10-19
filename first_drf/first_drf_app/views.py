@@ -15,6 +15,13 @@ class ManufacturerViewsets(ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Responce(serializer.data)
 
+    def perform_create(self, serializer):
+        name = serializer.data['name']
+        if not name.startswith('ООО'):
+            name = 'ООО' + name
+            serializer.validated_data['name'] = name
+        return super().perform_create(serializer)
+
 class ProductViewsets(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
